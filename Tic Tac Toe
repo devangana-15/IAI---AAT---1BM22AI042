@@ -1,0 +1,42 @@
+def nextMove(player, board):
+    def can_win(board, player, r, c):
+        temp_board = [row[:] for row in board]
+        temp_board[r][c] = player
+        return (
+            all(temp_board[r][i] == player for i in range(3)) or
+            all(temp_board[i][c] == player for i in range(3)) or
+            (r == c and all(temp_board[i][i] == player for i in range(3))) or
+            (r + c == 2 and all(temp_board[i][2 - i] == player for i in range(3)))
+        )
+    def check_move(player):
+        for r in range(3):
+            for c in range(3):
+                if board[r][c] == '_':
+                    if can_win(board, player, r, c):
+                        return (r, c)
+        return None
+    winning_move = check_move(player)
+    if winning_move:
+        print(winning_move[0], winning_move[1])
+        return
+    opponent = 'O' if player == 'X' else 'X'
+    blocking_move = check_move(opponent)
+    if blocking_move:
+        print(blocking_move[0], blocking_move[1])
+        return
+    if board[1][1] == '_':
+        print(1, 1)
+        return
+    for r, c in [(0, 0), (0, 2), (2, 0), (2, 2)]:
+        if board[r][c] == '_':
+            print(r, c)
+            return
+    for r, c in [(0, 1), (1, 0), (1, 2), (2, 1)]:
+        if board[r][c] == '_':
+            print(r, c)
+            return
+
+if __name__ == '__main__':
+    player = input().strip()
+    board = [list(input().strip()) for _ in range(3)]  # Convert each row to a list of characters
+    nextMove(player, board)
