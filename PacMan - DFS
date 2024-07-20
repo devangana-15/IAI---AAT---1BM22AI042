@@ -1,0 +1,43 @@
+def dfs(r, c, pacman_r, pacman_c, food_r, food_c, grid ):    
+    stack = []
+    visited = []
+    path = []
+    dir = [(-1,0), (0,-1), (0,1), (1,0)]
+    dfs_nodes = []
+
+    stack.append((int(pacman_r), int(pacman_c), path))
+    visited.append((int(pacman_r), int(pacman_c)))
+    while stack:
+        row, col, path = stack.pop()
+        if (row, col) not in dfs_nodes:
+            dfs_nodes.append((row,col))
+            path.append((row,col))
+            if row==int(food_r) and col==int(food_c):
+                return path, dfs_nodes
+            for d in dir:
+                next_row=row + d[0]
+                next_col=col + d[1]    
+                if (0 <= next_row <= int(r) and 0 <= next_col <= int(c) and (next_row, next_col) not in visited and grid[next_row][next_col]!= "%"):
+                    stack.append((next_row, next_col, path.copy()))
+                    visited.append((next_row, next_col))
+    return None, None
+
+pacman=input()
+pacman_r, pacman_c=pacman.split()
+food = input()
+food_r, food_c = food.split()
+dim = input()
+r, c = dim.split()
+grid = []
+for i in range(int(r)):
+    grid.append(input())
+path, nodes = dfs(r, c, pacman_r, pacman_c, food_r, food_c, grid)
+
+if path is not None and nodes is not None:
+    print(len(nodes))
+    for node in nodes:
+        print(node[0], node[1])
+    print(len(path)-1)
+    for node in path:
+        print(node[0], node[1])
+
